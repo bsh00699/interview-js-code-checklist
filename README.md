@@ -201,3 +201,180 @@ class Child extends Parent { }
 const child = new Child()
 console.log(mockInstanceof(child, Parent), mockInstanceof(child, Child), mockInstanceof(child, Array))
 ```
+#### 手写Promise
+```
+
+class MockPromise {
+  constructor(exec) {
+    this.status = 'pending'
+    this.value = null
+    this.resolvedTasks = []
+    this.rejectedTasks = []
+    this._resolve = this._resolve.bind(this)
+    this._reject = this._reject.bind(this)
+    // catch err 到 then 中的 onRejected 的reason
+    try {
+      exec(this._resolve, this._reject)
+    } catch (error) {
+      this._reject(error)
+    }
+  }
+
+  _resolve(value) {
+    if (this.status === MockPromise.PENDING) {
+      this.status = MockPromise.FULFILLED
+      this.value = value
+      this.resolvedTasks.forEach((fn) => {
+        fn(value)
+      })
+    }
+  }
+
+  _reject(reason) {
+    if (this.status === MockPromise.PENDING) {
+      this.status = MockPromise.REJECTED
+      this.value = reason
+      this.rejectedTasks.forEach((fn) => {
+        fn(reason)
+      })
+    }
+  }
+
+  then(onFulfilled, onRejected) {
+    if (typeof onFulfilled !== 'function') {
+      onFulfilled = (value) => {
+        return value
+      }
+    }
+
+    if (typeof onRejected !== 'function') {
+      onRejected = (resaon) => {
+        throw resaon
+      }
+    }
+    /**
+     * 实现链式调用 return 一个promise 
+     * 判断 onFulfilled() 的返回值类型就好了 
+     */
+    return new MockPromise((resolve, reject) => {
+      if (this.status === MockPromise.FULFILLED) {
+        setTimeout(() => {
+          try {
+            const res = onFulfilled(this.value)
+            if (res instanceof MockPromise) {
+              res.then(value => {
+                resolve(value)
+              })
+            } else {
+              resolve(res)
+            }
+          } catch (error) {
+            reject(error)
+          }
+        })
+      }
+
+      if (this.status === MockPromise.REJECTED) {
+        setTimeout(() => {
+          try {
+            const res = onRejected(this.value)
+            if (res instanceof MockPromise) {
+              res.then(value => {
+                resolve(value)
+              })
+            } else {
+              resolve(res)
+            }
+          } catch (error) {
+            reject(error)
+          }
+        })
+      }
+      /**解决 resolve() 异步处理
+       * 比如 setTimeout(() => { resolve(3) }, 1000)
+       * 这时候 先执行 的是 then 函数，我们可以先把要执行的函数 压入 一个数组中
+       * 等到执行到 resolve 的时候，再去判断状态，然后遍历数组将数组中的函数执行
+       */
+      if (this.status === MockPromise.PENDING) {
+        // push 的肯定是一个函数
+        this.resolvedTasks.push((value) => {
+          setTimeout(() => {
+            const res = onFulfilled(value)
+            console.log('res===',res );
+            MockPromise.handlePromise(res, resolve, reject)
+            // try {
+            //   const res = onFulfilled(value)
+            //   if (res instanceof MockPromise) {
+            //     res.then(value => {
+            //       resolve(value)
+            //     })
+            //   } else {
+            //     resolve(res)
+            //   }
+            // } catch (error) {
+            //   reject(error)
+            // }
+          })
+        })
+
+        this.rejectedTasks.push((reason) => {
+          setTimeout(() => {
+            try {
+              const res = onRejected(reason)
+              if (res instanceof MockPromise) {
+                res.then(value => {
+                  resolve(value)
+                })
+              } else {
+                resolve(res)
+              }
+            } catch (error) {
+              reject(error)
+            }
+          })
+        })
+      }
+    })
+  }
+
+}
+
+MockPromise.PENDING = 'pending'
+MockPromise.FULFILLED = 'fulfilled'
+MockPromise.REJECTED = 'rejected'
+MockPromise.handlePromise = function (res, resolve, reject) {
+  try {
+    if (res instanceof MockPromise) {
+      res.then(value => {
+        resolve(value)
+      })
+    } else {
+      resolve(res)
+    }
+  } catch (error) {
+    reject(error)
+  }
+}
+
+
+const dd = new MockPromise((resolve, reject) => {
+  console.log('1');
+  setTimeout(() => {
+  resolve(3)
+  }, 200)
+
+}).then((val) => {
+  console.log('val--', val);
+  // return 'haha' + val
+  return new MockPromise((resolve, reject) => {
+    resolve('新的promise' + val)
+  })
+}, reason => {
+  console.log('reason--', reason);
+})
+  .then(val => {
+    console.log('then--', val);
+  })
+
+console.log('2');
+```
