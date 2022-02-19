@@ -378,3 +378,42 @@ const dd = new MockPromise((resolve, reject) => {
 
 console.log('2');
 ```
+#### 手写Promise.all()
+```
+var promise1 = Promise.resolve('promise1');
+var promise2 = new Promise(function(resolve, reject) {
+  setTimeout(resolve, 2000, 'promise2');
+});
+var promise3 = new Promise(function(resolve, reject) {
+  setTimeout(resolve, 1000, 'promise3');
+});
+
+Promise.all([promise1, promise2, promise3]).then(function(values) {
+  console.log(values);
+});
+// expected output: Array ["promise1","promise2", "promise3"]
+
+function promiseAll(promises) {
+  return new Promise(function(resolve, reject) {
+    if (!isArray(promises)) {
+      return reject(new TypeError('arguments must be an array'));
+    }
+    var resolvedCounter = 0;
+    var promiseNum = promises.length;
+    var resolvedValues = new Array(promiseNum);
+    for (var i = 0; i < promiseNum; i++) {
+      (function(i) {
+        Promise.resolve(promises[i]).then(function(value) {
+          resolvedCounter++
+          resolvedValues[i] = value
+          if (resolvedCounter == promiseNum) {
+            return resolve(resolvedValues)
+          }
+        }, function(reason) {
+          return reject(reason)
+        })
+      })(i)
+    }
+  })
+}
+```
