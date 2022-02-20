@@ -417,3 +417,66 @@ function promiseAll(promises) {
   })
 }
 ```
+#### 发布订阅
+* 主要解决是“类或对象之间的交互”问题
+* 在对象之间定义一个一对多的依赖，当一个对象状态改变的时候，所有依赖的对象都会自动收到通知
+* 将不同的行为代码解耦，具体到观察者模式，它将观察者和被观察者代码解耦
+* 借助设计模式，我们利用更好的代码结构，将一大坨代码拆分成职责更单一的小类，让其满足开闭原则、高内聚低耦合等特性，以此来控制和应对代码的复杂性，提高代码的可扩展性
+```
+class Subject {
+  constructor(state) {
+    this.state = state
+    this.observers = []
+  }
+  register(observers) {
+    this.observers.push(observers)
+  }
+  changeState(state) {
+    this,state = state
+    //重点 通知到所有的观察者
+    this.observers.forEach(o => o.update(state))
+  }
+}
+
+class Observer {
+  constructor(name) {
+    this.name = name
+  }
+  update(newState) {
+    console.log(newState);
+  }
+}
+
+const subject = new Subject()
+const a = new Observer('123')
+const b = new Observer('456')
+
+subject.register(a)
+subject.register(b)
+subject.changeState('zxc')
+```
+#### 单例模式
+* 一个类只允许创建一个对象（或者实例），那这个类就是一个单例类
+* 单例模式用来创建全局唯一的对象
+* 举个栗子: 1.dialog 弹框 2.日志log的记录
+```
+// 比如这样
+var People = function(name) {
+  this.name = name
+}
+
+var Singleton = function(Obj) {
+  var instance
+  Singleton = function() {
+    if (instance) return instance
+    return instance = new Obj(arguments)
+  }
+  return Singleton
+}
+
+var peopleSingleton = Singleton(People)
+
+var a = new peopleSingleton('a')
+var b = new peopleSingleton('b')
+console.log(a===b)
+```
