@@ -3,9 +3,13 @@
 * [手写继承](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99%E7%BB%A7%E6%89%BF)
 * [手写new](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99new)
 * [手写bind](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99bind)
-* [手写call]()
-* [手写apply]()
-* [手写instanceof]()
+* [手写call](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99call)
+* [手写apply](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99apply)
+* [手写instanceof](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99instanceof)
+* [手写Promise](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99promise)
+* [手写Promise.all()](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99promiseall)
+* [发布订阅](https://github.com/bsh00699/interview-js-code-checklist#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85)
+* [单例模式](https://github.com/bsh00699/interview-js-code-checklist#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F)
 #### 手写继承
 * 原型继承，核心 Son.prototype = new Father()
 * 要想为子类新增属性和方法，必须要在new Father()这样的语句之后执行
