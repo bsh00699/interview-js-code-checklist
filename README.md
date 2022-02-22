@@ -421,6 +421,46 @@ function promiseAll(promises) {
   })
 }
 ```
+#### 防抖
+* 花名搜索
+```
+const debounce = (fn, delay) => {
+  let timer = null
+  return function () {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, delay)
+  }
+}
+
+const myDebounce = debounce(() => {
+  console.log('+++')
+}, 1000)
+myDebounce()
+```
+#### 节流
+* 抢购热卖商品、秒杀，在指定的时间间隔内只执行一次
+```
+const throttle = (fn, delay) => {
+  let startTime = 0
+  return function () {
+    const nowTime = new Date().getTime()
+    if (nowTime - startTime > delay) {
+      fn.apply(this, arguments)
+      startTime = nowTime
+    }
+  }
+}
+
+const myThrottle = throttle(() => {
+  console.log('>>>')
+}, 10)
+
+for (let i = 0; i < 1000000; i++) {
+  myThrottle()
+}
+```
 #### 发布订阅
 * 主要解决是“类或对象之间的交互”问题
 * 在对象之间定义一个一对多的依赖，当一个对象状态改变的时候，所有依赖的对象都会自动收到通知
