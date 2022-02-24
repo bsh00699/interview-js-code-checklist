@@ -8,6 +8,8 @@
 * [手写instanceof](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99instanceof)
 * [手写Promise](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99promise)
 * [手写Promise.all()](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99promiseall)
+* [手写防抖](https://github.com/bsh00699/interview-js-code-checklist#%E9%98%B2%E6%8A%96)
+* [手写节流](https://github.com/bsh00699/interview-js-code-checklist#%E8%8A%82%E6%B5%81)
 * [发布订阅](https://github.com/bsh00699/interview-js-code-checklist#%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85)
 * [单例模式](https://github.com/bsh00699/interview-js-code-checklist#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F)
 #### 手写继承
@@ -461,6 +463,53 @@ for (let i = 0; i < 1000000; i++) {
   myThrottle()
 }
 ```
+#### 深拷贝
+```
+const deepClone = (obj = {}) => {
+  if (type obj !== 'object' || obj === null) {
+    return obj
+  }
+  let result = obj instanceof Array ? [] : {}
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      result[key] = deepClone(obj[key])
+    }
+  }
+  return result
+}
+```
+存在问题-循环引用,造成递归进入死循环导致栈内存溢出了
+```
+const obj = { name: 'zxc', age: 18 }
+obj.obj = obj
+deepClone(obj)
+```
+我们可以额外开辟一个存储空间，来存储当前对象和拷贝对象的对应关系，当需要拷贝当前对象时，先去存储空间中找，有没有拷贝过这个对象，如果有的话直接返回，如果没有的话继续拷贝，这样就巧妙化解的循环引用的问题
+```
+const deepClone = (obj = {}, map = new Map()) => {
+  if (typeof obj !== 'object' || obj == null ) {
+    return obj
+  }
+  // 或者 Array.isArray(target) ? [] : {};
+  let result = obj instanceof Array ? [] : {}
+  if (map.get(obj)) {
+    console.log('缓存中获取', obj);
+    return map.get(obj);
+  }
+  // 反正是对象的引用，先将对象 set 进去，
+  // 后面再实现对象属性赋值 result[key] = deepClone(obj[key], map)
+  // 依然能得到 赋值后的对象
+  map.set(obj, result);
+  for (let key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      result[key] = deepClone(obj[key], map)
+    }
+  }
+  return result
+}
+```
+
+#### 单例模式
 #### 发布订阅
 * 主要解决是“类或对象之间的交互”问题
 * 在对象之间定义一个一对多的依赖，当一个对象状态改变的时候，所有依赖的对象都会自动收到通知
