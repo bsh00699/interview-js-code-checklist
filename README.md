@@ -571,3 +571,74 @@ var a = new peopleSingleton('a')
 var b = new peopleSingleton('b')
 console.log(a===b)
 ```
+#### Mock Koa
+##### 与Express相比
+*  express框架中间件实质还是异步回调，koa2框架中间件原理原生支持async / await
+*  express框架中包括路由处理模块，而koa2框架则就是一个精简的web服务
+*  express框架本身是符合洋葱圈模型的，但是中间件中如果涉及到异步，则打破洋葱圈的模型，这时就需要将中间件函数全部替换成 async/await 
+*  koa 框架的可扩展性比较好
+```
+const http = require('http')
+
+// 组合中间件
+function compose(middlewareList) {
+    return function (ctx) {
+        function dispatch(i) {
+            const fn = middlewareList[i]
+            try {
+                // return Promise 主要是处理中间件既是async函数 又是 普通函数都可以执行
+                // 而中间件中的 next 函数就是 dispatch.bind(null, i + 1)
+                return Promise.resolve(
+                    fn(ctx, dispatch.bind(null, i + 1)) 
+                )
+            } catch (err) {
+                return Promise.reject(err)
+            }
+        }
+        return dispatch(0)
+    }
+}
+
+class LikeKoa2 {
+    constructor() {
+        this.middlewareList = []
+    }
+
+    use(fn) {
+        this.middlewareList.push(fn)
+        return this
+    }
+
+    createContext(req, res) {
+        const ctx = {
+            req,
+            res
+        }
+        // 将req 上的属性赋值给ctx
+        ctx.query = req.query // 等等 
+        return ctx
+    }
+
+    // handleRequest(ctx, fn) {
+    //     return fn(ctx)
+    // }
+
+    callback() {
+        const fn = compose(this.middlewareList)
+
+        return (req, res) => {
+            const ctx = this.createContext(req, res)
+            return fn(ctx)
+            // return this.handleRequest(ctx, fn)
+        }
+    }
+
+    listen(...args) {
+        const server = http.createServer(this.callback())
+        server.listen(...args)
+    }
+}
+
+module.exports = LikeKoa2
+
+```
