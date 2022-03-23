@@ -571,7 +571,108 @@ var a = new peopleSingleton('a')
 var b = new peopleSingleton('b')
 console.log(a===b)
 ```
-#### Mock Koa
+#### 手写 Express
+```
+const http = require('http')
+const slice = Array.prototype.slice
+
+class LikeExpress {
+    constructor() {
+        this.router = {
+            all: [], // app.use()
+            get: [],
+            post: []
+        }
+    }
+
+    register(path) {
+        const info = {}
+        if (typeof path === 'string') {
+            info.path = path
+            // 从第二个参数开始取出，然后转换为数组
+            info.stack = slice.call(arguments, 1)
+        } else {
+            info.path = '/'
+            // 从第一个参数开始取出，然后转换为数组
+            info.stack = slice.call(arguments, 0)
+        }
+        return info
+    }
+
+    use() {
+        const info = this.register.apply(this, arguments)
+        this.router.all.push(info)
+    }
+
+    get() {
+        const info = this.register.apply(this, arguments)
+        this.router.get.push(info)
+    }
+
+    post() {
+        const info = this.register.apply(this, arguments)
+        this.router.post.push(info)
+    }
+
+    match(url, method) {
+        let stack = []
+        if(url === 'favicon.ico') {
+            return stack
+        }
+        // 获取 路由
+        const curRoutes = []
+        curRoutes = curRoutes.concat(this.router.all)
+        curRoutes = curRoutes.concat(this.router[method]) // 根据 method 区别
+        // 根据 url 来区别
+        curRoutes.forEach(routerInfo => {
+            // 比如访问 /api/get-cookie
+            if(url.indexOf(routerInfo.path) === 0) {
+                // /
+                // /api
+                // /api/get-cookie
+                stack = stack.concat(routerInfo.stack)
+            }
+        })
+        return stack
+    }
+    // next 核心机制
+    handle(req, res, stack) {
+        const next = () => {
+            const middleware = stack.shift()
+            if(middleware) {
+                middleware(req, res, next)
+            }
+        }
+        next()
+    }
+
+    callback() {
+        return (req, res) => {
+            res.json = (data) => {
+                res.setHeader('Content-Type', 'application/json')
+                res.end(
+                    JSON.stringify(data)
+                )
+            }
+        }
+        const url = req.url
+        const method = req.method.toLowerCase()
+        const resultInfoList = this.match(url, method)
+        // 处理 next 机制
+        this.handle(req, res, resultInfoList)
+    }
+
+    listen(...args) {
+        const server = http.createServer(this.callback())
+        server.listen(...args)
+    }
+}
+
+module.exports = () => {
+    return new LikeExpress()
+}
+```
+#### 手写 Koa
 ##### 与Express相比
 *  express框架中间件实质还是异步回调，koa2框架中间件原理原生支持async / await
 *  express框架中包括路由处理模块，而koa2框架则就是一个精简的web服务
