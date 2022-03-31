@@ -48,4 +48,63 @@ const deepClone = (obj = {}, map = new Map()) => {
   return result
 }
 ```
-
+#### flatten()
+请实现 flatten() 函数，入参为一个 javascript 对象（Object 或者 Array），返回值为扁平化后的结果。
+```
+// 入参
+{
+  a: 1,
+  b: [1, 2, { c: {d: true} }, [3], {e: [6, 7, 8]}],
+  f: {g: 2, h: 3},
+  i: null, 
+}
+// 返回
+{
+  "a": 1,
+  "b[0]": 1,
+  "b[1]": 2,
+  "b[2].c.d": true,
+  "b[3][0]": 3,
+  "b[4].e[0]": 6,
+  "b[4].e[1]": 7,
+  "b[4].e[2]": 8,
+  "f.g": 2,
+  "f.h": 3,
+  "i": null
+}
+```
+```
+let result = {};
+const flatten = (params, key) => {
+  if (params instanceof Array) {
+    params.forEach((param, index) => {
+      if (param instanceof Object || param instanceof Array) {
+        flatten(param, `${key}[${index}]`);
+      } else {
+        result[`${key}[${index}]`] = flatten(param, `${key}[${index}]`);
+      }
+    });
+  } else if (params instanceof Object) {
+    for (var itemKey in params) {
+      const itemValue = params[itemKey];
+      if (itemValue instanceof Array || itemValue instanceof Object) {
+        if (key) {
+          flatten(itemValue, `${key}.${itemKey}`)
+        } else {
+          flatten(itemValue, itemKey);
+        }
+      } else if (itemValue === null || itemValue === undefined) {
+        result[itemKey] = flatten(itemValue, itemKey);
+      } else {
+        if (key) {
+          result[`${key}.${itemKey}`] = flatten(itemValue, itemKey);
+        } else {
+          result[itemKey] = flatten(itemValue, itemKey);
+        }
+      }
+    }
+  } else {
+    return params;
+  }
+}
+```
