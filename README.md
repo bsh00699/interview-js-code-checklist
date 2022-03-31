@@ -1,5 +1,5 @@
 # interview-js-code-checklist
-常见js手撕题汇总
+功能原理
 * [手写继承](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99%E7%BB%A7%E6%89%BF)
 * [手写new](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99new)
 * [手写bind](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99bind)
@@ -14,6 +14,11 @@
 * [单例模式](https://github.com/bsh00699/interview-js-code-checklist#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F)
 * [手写Express](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99-express)
 * [手写Koa](https://github.com/bsh00699/interview-js-code-checklist#%E6%89%8B%E5%86%99-koa)
+
+笔试
+* [深拷贝](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E6%B7%B1%E6%8B%B7%E8%B4%9D)
+* [flatten函数实现](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#flatten)
+
 #### 手写继承
 * 原型继承，核心 Son.prototype = new Father()
 * 要想为子类新增属性和方法，必须要在new Father()这样的语句之后执行
