@@ -49,7 +49,7 @@ const deepClone = (obj = {}, map = new Map()) => {
 }
 ```
 #### flatten()
-请实现 flatten() 函数，入参为一个 javascript 对象（Object 或者 Array），返回值为扁平化后的结果。
+1.请实现 flatten() 函数，入参为一个 javascript 对象（Object 或者 Array），返回值为扁平化后的结果。
 ```
 // 入参
 {
@@ -107,6 +107,68 @@ const flatten = (params, key) => {
     return params;
   }
 }
+```
+2.实现 flatten() 函数，入参为[1, [2, [3, 4]]]，返回结果为 [1, 2, 3, 4]
+```
+const flatten = (arr) => {
+  return arr.reduce((prev, curr) => {
+    if (curr instanceof Array) {
+      return prev.concat(flatten(curr))
+    } else {
+      return [...prev, curr]
+    }
+  }, [])
+}
+
+console.log(flatArr([1, [2, [3, 4]]]));
+```
+#### 柯里化
+以下是一个加法函数，存在curry 这个函数使得以下结果都相同
+```
+var add = (a, b, c) => a + b + c
+add(1, 2, 3) // 6
+
+const curryAdd = curry(add)
+// 以下输出结果都相同
+curryAdd(1, 2, 3) // 6
+curryAdd(1, 2)(3) // 6
+curryAdd(1)(2)(3) // 6
+curryAdd(1)(2, 3) // 6
+```
+核心: 期待传入的参数，满足预期参数
+```
+const curry = (...args) => {
+  const fn = args.shift()
+  const length = fn.length
+  let paramsList = args || [] // 记录参数个数
+  return function (..._args) {
+    paramsList = [...paramsList, ..._args]
+    if (paramsList.length < length) {
+      return curry(fn, ...paramsList)
+    } else if (paramsList.length === length) {
+      return fn.apply(this, paramsList)
+    }
+  }
+}
+const addInter = curry(add)
+const res = addInter(1)(3)(2)
+console.log('res--', res);
+```
+#### 随机打乱数组
+一个数组 x = [1, 2, 3, 4, 5]，经过函数shuffle(x) 处理后，返回一个新的数组x, 要求数组x被随机打乱
+思路：遍历数组，每次从数组中随机取一个值，然后删除，再次重复随机取和删除操作
+```
+const x = [1, 2, 3, 4, 5];
+const shuffle = (x) => {
+  const temp = []
+  for (let i = 0; i < 5; i++) {
+    const randomIndex = Math.floor(Math.random() * x.length)
+    temp[i] = x.splice(randomIndex, 1)[0]
+  }
+  return temp
+}
+
+console.log(shuffle(x))
 ```
 #### 冒泡排序（Bubble Sort）
 ```
