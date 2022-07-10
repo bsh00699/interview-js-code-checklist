@@ -18,6 +18,12 @@
 笔试
 * [深拷贝](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E6%B7%B1%E6%8B%B7%E8%B4%9D)
 * [flatten函数实现](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#flatten)
+* [柯里化](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E6%9F%AF%E9%87%8C%E5%8C%96)
+* [随机打乱数组](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E9%9A%8F%E6%9C%BA%E6%89%93%E4%B9%B1%E6%95%B0%E7%BB%84)
+
+* [冒泡排序](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8Fbubble-sort)
+* [插入排序](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F)
+* [归并排序](https://github.com/bsh00699/interview-js-code-checklist/blob/main/js.md#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F)
 
 #### 手写继承
 * 原型继承，核心 Son.prototype = new Father()
