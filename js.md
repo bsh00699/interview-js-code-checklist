@@ -170,6 +170,46 @@ const shuffle = (x) => {
 
 console.log(shuffle(x))
 ```
+#### 大数相加
+```
+const add = (a, b) => {
+  let i = a.length - 1
+  let j = b.length - 1
+
+  let carry = 0
+  let ret = ''
+  while (i >= 0 || j >= 0) {
+    let x = 0
+    let y = 0
+    let sum
+    if (i >= 0) {
+      // 取a的末位 转整数
+      x = a[i] - '0'
+      i--
+    }
+
+    if (j >= 0) {
+      // 取b的末位 转整数
+      y = b[j] - '0'
+      j--
+    }
+    sum = x + y + carry
+    if (sum >= 10) {
+      carry = 1
+      sum -= 10
+    } else {
+      carry = 0
+    }
+    ret = sum + ret
+  }
+  if (carry) {
+    ret = carry + ret
+  }
+  return ret
+}
+
+console.log('res', add('123', '321'));
+```
 #### 冒泡排序（Bubble Sort）
 ```
 var arr = [3,4,1,2];
