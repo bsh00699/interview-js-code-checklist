@@ -170,6 +170,109 @@ const shuffle = (x) => {
 
 console.log(shuffle(x))
 ```
+#### 递归生成树
+给出下面的数据格式（从Excel表中拿到）
+```
+const csv = `
+name,age,parent
+Bob,30,David
+David,60
+Anna,10,Bob
+`;
+```
+期望返回这样的数据结构
+```
+[
+ {
+   name: 'Bob',
+   age: '30',
+   parent: [
+     {
+       name: 'David',
+       age: 60
+     }
+   ],
+   children: [
+     {
+       name: 'Anna',
+       age: 10,
+     }
+   ]
+ }
+]
+```
+```
+const pro = (csv = '') => {
+  const res = {}
+  const arr = csv.split('\n')
+  console.log('arr-', arr);
+  const generator = (str, obj) => {
+    if (Object.keys(obj).length === 0) {
+      const [name, age, parent] = str.split(',')
+      obj.name = name
+      obj.age = age
+      obj.parent = []
+      obj.parent.push({
+        name: parent,
+        age: null
+      })
+      obj.children = []
+      return
+    }
+    for (const key in obj) {
+      const [name, age, parent] = str.split(',')
+      if (key === 'name') {
+        // children
+        if (obj[key] === parent) {
+          obj['children'] = []
+          obj['children'].push({
+            name, age
+          })
+        }
+      }
+      if (key === 'parent') {
+        const parentList = obj[key]
+        for (let k = 0; k < parentList.length; k++) {
+          const { name: parName } = parentList[k]
+          if (parName === name) {
+            parentList[k].age = age
+          }
+        }
+      }
+    }
+  }
+  for (let i = 0; i < arr.length; i++) {
+    const row = arr[i]
+    if (!row || row === 'name,age,parent') continue
+    generator(row, res)
+  }
+  return res
+}
+const res = pro(csv)
+console.log('res--', res);
+```
+#### 斐波那契数列
+给一个数判断它是不是在斐波那契数列中，如果在返回在数组中的位置，如果不在返回-1
+```
+// [1, 1, 2, 3, 5, 8, 13, ...]
+function findIndexInFibonacciList(num) {
+  if (num === 1) return 1
+  if (num === 2) return 2
+  let res = 0
+  let per = 2
+  let perper = 1
+  for (let i = 3; i <= num; i++) {
+    res = per + perper
+    if (num === res) {
+      return i
+    }
+    perper = per
+    per = res
+  }
+  return -1
+}
+console.log('res', findIndexInFibonacciList(8));
+```
 #### 大数相加
 ```
 const add = (a, b) => {
