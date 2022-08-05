@@ -36,6 +36,6 @@
 
 #### 其他
 * [实现圣诞树](https://github.com/bsh00699/interview-js-code-checklist/blob/main/other.md#%E5%AE%9E%E7%8E%B0%E5%9C%A3%E8%AF%9E%E6%A0%91)
-* [大数相加]](https://github.com/bsh00699/interview-js-code-checklist/blob/main/other.md#%E5%A4%A7%E6%95%B0%E7%9B%B8%E5%8A%A0)
+* [大数相加](https://github.com/bsh00699/interview-js-code-checklist/blob/main/other.md#%E5%A4%A7%E6%95%B0%E7%9B%B8%E5%8A%A0)
 #### CSS
-* [div水平切垂直居中](https://github.com/bsh00699/interview-js-code-checklist/blob/main/css.md#div%E6%B0%B4%E5%B9%B3%E4%B8%94%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD)
+* [div水平且垂直居中](https://github.com/bsh00699/interview-js-code-checklist/blob/main/css.md#div%E6%B0%B4%E5%B9%B3%E4%B8%94%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD)
