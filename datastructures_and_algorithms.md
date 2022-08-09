@@ -1,5 +1,65 @@
 ### 数据结构与算法
 #### 数组
+* 合并两个有序数组[leetcode-88](https://leetcode.cn/problems/merge-sorted-array/)
+1.通过比较两数组
+```
+var merge = function(nums1, m, nums2, n) {
+  let il = 0
+  let ir = 0
+  const ans = []
+  while (il < m && ir < n) {
+    if (nums1[il] <= nums2[ir]) {
+      ans.push(nums1[il])
+      il++
+    } else {
+      ans.push(nums2[ir])
+      ir++
+    }
+  }
+  //比较完后，把依然还有元素的数组中的值
+  //依次放入 临时数组result
+  while (il < m) {
+    ans.push(nums1[il])
+    il++
+  }
+  while (ir < n) {
+    ans.push(nums2[ir])
+    ir++
+  }
+  console.log('aa', ans)
+  return ans
+};
+```
+2.双指针, 从后向前遍历，防止元素被覆盖
+```
+var merge = function(nums1, m, nums2, n) {
+  // 双指针 原地算法
+  let i = m - 1
+  let j = n - 1
+  let cnt = m + n - 1
+  while (j >= 0) {
+    if (nums1[i] <= nums2[j]) {
+      nums1[cnt--] = nums2[j--]
+    } else {
+      nums1[cnt--] = nums1[i--]
+    }
+  }
+}
+```
+* 删除有序数组中的重复项[leetcode-26](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
+过滤器 + cnt 计数
+```
+var removeDuplicates = function(nums) {
+  let cnt = 0
+  for (let i = 0; i < nums.length; i++) {
+    if (i === 0 || nums[i] !== nums[i - 1]) {
+      nums[cnt] = nums[i]
+      cnt++
+    }
+  }
+  return cnt
+};
+```
 #### 链表
 #### 栈与队列
 #### 单调栈
