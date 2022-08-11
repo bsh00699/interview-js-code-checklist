@@ -1,7 +1,7 @@
 ### 数据结构与算法
 #### 数组
-* 合并两个有序数组[leetcode-88](https://leetcode.cn/problems/merge-sorted-array/)
-1.通过比较两数组
+* 合并两个有序数组-[leetcode-88](https://leetcode.cn/problems/merge-sorted-array/)
+* 1.通过比较两数组
 ```
 var merge = function(nums1, m, nums2, n) {
   let il = 0
@@ -30,7 +30,7 @@ var merge = function(nums1, m, nums2, n) {
   return ans
 };
 ```
-2.双指针, 从后向前遍历，防止元素被覆盖
+* 2.双指针, 从后向前遍历，防止元素被覆盖
 ```
 var merge = function(nums1, m, nums2, n) {
   // 双指针 原地算法
@@ -46,8 +46,8 @@ var merge = function(nums1, m, nums2, n) {
   }
 }
 ```
-* 删除有序数组中的重复项[leetcode-26](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
-过滤器 + cnt 计数
+* 删除有序数组中的重复项-[leetcode-26](https://leetcode.cn/problems/remove-duplicates-from-sorted-array/)
+* 过滤器 + cnt 计数
 ```
 var removeDuplicates = function(nums) {
   let cnt = 0
@@ -61,6 +61,61 @@ var removeDuplicates = function(nums) {
 };
 ```
 #### 链表
+* 反转链表-[leetcode-206](https://leetcode.cn/problems/reverse-linked-list/)
+```
+var reverseList = function(head) {
+  let curr = head
+  let prev = null
+  while (curr) {
+    const tempNext = curr.next
+    curr.next = prev
+    prev = curr
+    curr= tempNext
+  }
+  return prev
+}
+```
+* k个一组翻转链表-[leetcode-25](https://leetcode.cn/problems/reverse-nodes-in-k-group/)
+```
+const getEnd = (head, k) => {
+  while (head) {
+    k--
+    if (k === 0) return head
+    head = head.next
+  }
+  return null
+}
+var reverseList = function(head, stop) {
+  let prev = head
+  let curr = head.next
+  while (curr !== stop) {
+    const tempNext = curr.next
+    curr.next = prev
+    prev = curr
+    curr= tempNext
+  }
+}
+var reverseKGroup = function(head, k) {
+  const protect = new ListNode(0, head)
+  let prev = protect
+
+  while (head) {
+    // 1.分组
+    const end = getEnd(head, k)
+    if (end === null) break
+    // 2.组内反转
+    const nextGroupHead = end.next
+    reverseList(head, nextGroupHead)
+    // 3.组与组之间的关系
+    prev.next = end
+    head.next = nextGroupHead
+
+    prev = head
+    head = nextGroupHead
+  }
+  return protect.next
+};
+```
 #### 栈与队列
 #### 单调栈
 #### 单调队列
