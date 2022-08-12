@@ -116,6 +116,120 @@ var reverseKGroup = function(head, k) {
   return protect.next
 };
 ```
+* 合并两个有序链表-[leetcode-21](https://leetcode.cn/problems/merge-two-sorted-lists/)
+```
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var mergeTwoLists = function(list1, list2) {
+  const head = new ListNode(-1)
+  let curr = head
+  while (list1 && list2) {
+    if (list1.val < list2.val) {
+      curr.next = list1
+      list1 = list1.next
+    } else {
+      curr.next = list2
+      list2 = list2.next
+    }
+    curr = curr.next
+  }
+  curr.next = list1 ? list1 : list2
+  return head.next
+};
+```
+* 合并K个升序链表-[leetcode-23](https://leetcode.cn/problems/merge-k-sorted-lists/)   
+1.在合并两个有序链表基础之上，使用循环合并
+```
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function(lists) {
+  let ans = null
+  for (let i = 0; i < lists.length; i++) {
+    const arr = lists[i]
+    ans = mergeTwoLists(ans, arr)
+  }
+  return ans
+};
+
+var mergeTwoLists = function(list1, list2) {
+  const head = new ListNode(-1)
+  let curr = head
+  while (list1 && list2) {
+    if (list1.val < list2.val) {
+      curr.next = list1
+      list1 = list1.next
+    } else {
+      curr.next = list2
+      list2 = list2.next
+    }
+    curr = curr.next
+  }
+  curr.next = list1 ? list1 : list2
+  return head.next
+};
+```
+2.分治,转化为合并2个有序链表
+```
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+const merge = (list, start, end) => {
+  // 临界点
+  if (start === end) return list[start]
+  const mid = Math.floor((start + end) / 2)
+  const l1 = merge(list, start, mid)
+  const l2 = merge(list, mid + 1, end)
+  return mergeTwoLists(l1, l2)
+}
+/**
+ * @param {ListNode[]} lists
+ * @return {ListNode}
+ */
+var mergeKLists = function(lists) {
+  if (!lists.length) return null
+  return merge(lists, 0, lists.length - 1)
+};
+
+var mergeTwoLists = function(list1, list2) {
+  const head = new ListNode(-1)
+  let curr = head
+  while (list1 && list2) {
+    if (list1.val < list2.val) {
+      curr.next = list1
+      list1 = list1.next
+    } else {
+      curr.next = list2
+      list2 = list2.next
+    }
+    curr = curr.next
+  }
+  curr.next = list1 ? list1 : list2
+  return head.next
+};
+```
 #### 栈与队列
 #### 单调栈
 #### 单调队列
