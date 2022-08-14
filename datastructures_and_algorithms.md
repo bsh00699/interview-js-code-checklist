@@ -232,6 +232,58 @@ var mergeTwoLists = function(list1, list2) {
 ```
 #### 栈与队列
 #### 单调栈
+* 柱状图中最大矩形-[leetcode-84](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
+```
+var largestRectangleArea = function(heights) {
+  heights.push(0)
+  let ans = 0
+  const stack = []
+  for (let i = 0; i < heights.length; i++) {
+    let tempWidth = 0
+    const height = heights[i]
+    // 不满足单调递增
+    while (stack.length && stack[stack.length - 1].height >= height) {
+      tempWidth += stack[stack.length - 1].width
+      ans = Math.max(ans, stack[stack.length - 1].height * tempWidth)
+      stack.pop()
+    }
+    stack.push({
+      height,
+      width: tempWidth + 1
+    })
+  }
+  return ans
+};
+```
+* 接雨水-[leetcode-42](https://leetcode.cn/problems/trapping-rain-water/)
+```
+var trap = function(height) {
+  let ans = 0
+  const stack = []
+  for (let i = 0; i < height.length; i++) {
+    const h = height[i]
+    let tempWidth = 0
+    // 不满足单调递减
+    while (stack.length && stack[stack.length - 1].height <= h) {
+      const bottom = stack[stack.length - 1].height
+      tempWidth += stack[stack.length - 1].width
+      stack.pop()
+      let minHeight = 0
+      if (!stack.length) {
+        minHeight = 0
+      } else {
+        minHeight = Math.min(stack[stack.length - 1].height, h) - bottom
+      }
+      ans += minHeight * tempWidth
+    }
+    stack.push({
+      height: h,
+      width: tempWidth + 1
+    })
+  }
+  return ans
+};
+```
 #### 单调队列
 #### 哈希表、集合
 * 两数之和
