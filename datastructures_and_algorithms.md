@@ -231,6 +231,82 @@ var mergeTwoLists = function(list1, list2) {
 };
 ```
 #### 栈与队列
+* 有效括号-[leetcode-20](https://leetcode.cn/problems/valid-parentheses/)
+```
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+  const stack = []
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i]
+    if (ch === '(' || ch === '[' || ch === '{') {
+      stack.push(ch)
+    } else {
+      if (!stack.length) return false
+      const curr = stack.pop()
+      if (ch === ')' && curr !== '(') return false
+      if (ch === ']' && curr !== '[') return false
+      if (ch === '}' && curr !== '{') return false
+    }
+  }
+  return stack.length === 0
+};
+```
+* 最小栈-[leetcode-155](https://leetcode.cn/problems/min-stack/)
+```
+var MinStack = function() {
+  this.stack = []
+  this.preMin = []
+};
+
+/** 
+ * @param {number} val
+ * @return {void}
+ */
+MinStack.prototype.push = function(val) {
+  this.stack.push(val)
+  if (this.preMin.length === 0) {
+    this.preMin.push(val)
+  } else {
+    this.preMin.push(
+      Math.min(val, this.preMin[this.preMin.length - 1])
+    )
+  }
+};
+
+/**
+ * @return {void}
+ */
+MinStack.prototype.pop = function() {
+  this.stack.pop()
+  this.preMin.pop()
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.top = function() {
+  return this.stack[this.stack.length - 1]
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.getMin = function() {
+   return this.preMin[this.preMin.length - 1]
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * var obj = new MinStack()
+ * obj.push(val)
+ * obj.pop()
+ * var param_3 = obj.top()
+ * var param_4 = obj.getMin()
+ */
+```
 #### 单调栈
 * 柱状图中最大矩形-[leetcode-84](https://leetcode.cn/problems/largest-rectangle-in-histogram/)
 ```
