@@ -361,8 +361,36 @@ var trap = function(height) {
 };
 ```
 #### 单调队列
+* 滑动窗口最大值-[leetcode-239](https://leetcode.cn/problems/sliding-window-maximum/)
+```
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var maxSlidingWindow = function(nums, k) {
+  const ans = []
+  const que = [] // 下标（下标递增， 值递减）
+  for (let i = 0; i < nums.length; i++) {
+    // 判断出界 (窗口里只能放三个)
+    while (que.length && que[0] + k <= i) {
+      que.shift()
+    }
+    // 维护单调性
+    while (que.length && nums[que[que.length - 1]] <= nums[i]) {
+      que.pop()
+    }
+    que.push(i)
+    // 更新答案
+    if (i >= k - 1) {
+      ans.push(nums[que[0]])
+    }
+  }
+  return ans
+};
+```
 #### 哈希表、集合
-* 两数之和
+* 两数之和-[leetcode-1](https://leetcode.cn/problems/two-sum/)
 ```
 var twoSum = function(nums, target) {
   const len = nums.length
@@ -374,6 +402,50 @@ var twoSum = function(nums, target) {
       return [map.get(x), i]
     }
     map.set(nums[i], i)
+  }
+};
+```
+* LRU缓存-[leetcode-146](https://leetcode.cn/problems/lru-cache/)
+```
+/**
+ * @param {number} capacity
+ */
+var LRUCache = function(capacity) {
+   this.cacheMap = new Map()
+   this.size = capacity
+};
+
+/** 
+ * @param {number} key
+ * @return {number}
+ */
+LRUCache.prototype.get = function(key) {
+  if (!this.cacheMap.has(key)) return -1
+  const prev = this.cacheMap.get(key)
+  // 从原来位置删除
+  this.cacheMap.delete(key)
+  // 插入到尾部
+  this.cacheMap.set(key, prev)
+  return prev
+};
+
+/** 
+ * @param {number} key 
+ * @param {number} value
+ * @return {void}
+ */
+LRUCache.prototype.put = function(key, value) {
+  // 如果存在线删除
+  if (this.cacheMap.has(key)) {
+    this.cacheMap.delete(key)
+  }
+  // 正常插入，判断size
+  this.cacheMap.set(key, value)
+  if (this.cacheMap.size > this.size) {
+    // 删除头节点
+    // this.cacheMap.keys() 返回有序键名的遍历器
+    // this.cacheMap.keys().next().value 返回最先前插入的头节点的key
+    this.cacheMap.delete(this.cacheMap.keys().next().value)
   }
 };
 ```
