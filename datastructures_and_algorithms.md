@@ -405,6 +405,51 @@ var twoSum = function(nums, target) {
   }
 };
 ```
+* 模拟行走机器人-[leetcode-874](https://leetcode.cn/problems/walking-robot-simulation/)
+```
+/**
+ * @param {number[]} commands
+ * @param {number[][]} obstacles
+ * @return {number}
+ */
+var robotSim = function(commands, obstacles) {
+  // 1. 把障碍物坐标保存为无序集合
+  const s = new Set()
+  for (const obs of obstacles) {
+    s.add(`${obs[0]}_${obs[1]}`)
+  }
+ 
+  // 2.定义初始坐标
+  let x = 0
+  let y = 0
+  //dir:  北 0, 东 1, 南 2, 西 3
+  let dir = 0
+
+  // 3.方向数组
+  const dx = [0, 1, 0, -1]
+  const dy = [1, 0, -1, 0]
+
+  let ans = 0
+  for (let i = 0; i < commands.length; i++) {
+    const cmd = commands[i]
+    if (cmd === -1) {
+      dir = (dir + 1) % 4
+    } else if (cmd === -2) {
+      dir = (dir + 3) % 4
+    } else {
+      for (let j = 0; j < cmd; j++) {
+        let nx = x + dx[dir]
+        let ny = y + dy[dir]
+        if (s.has(`${nx}_${ny}`)) break
+        x = nx
+        y = ny
+      }
+    }
+    ans = Math.max(ans, x * x + y * y)
+  }
+  return ans
+};
+```
 * LRU缓存-[leetcode-146](https://leetcode.cn/problems/lru-cache/)
 ```
 /**
