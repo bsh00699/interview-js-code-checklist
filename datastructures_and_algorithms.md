@@ -494,7 +494,59 @@ LRUCache.prototype.put = function(key, value) {
   }
 };
 ```
-
+* 字母异位分词-[leetcode-49](https://leetcode.cn/problems/group-anagrams/)
+```
+/**
+ * @param {string[]} strs
+ * @return {string[][]}
+ */
+var groupAnagrams = function(strs) {
+  const ans = []
+  const map = new Map()
+  for (let i = 0; i < strs.length; i++) {
+    const str = strs[i]
+    const temp = str.split('').sort().join()
+    if (!map.has(temp)) {
+      map.set(temp, [])
+    }
+    if (map.has(temp)) {
+      map.set(temp, [...map.get(temp), str])
+    }
+  }
+  for (const[_, value] of map) {
+    ans.push(value)
+  }
+  return ans
+};
+```
+* 子域名访问次数-[leetcode-811](https://leetcode.cn/problems/subdomain-visit-count/)
+```
+/**
+ * @param {string[]} cpdomains
+ * @return {string[]}
+ */
+var subdomainVisits = function(cpdomains) {
+  const map = new Map()
+  const ans = []
+  for(const main of cpdomains) {
+    const [num, str] = main.split(' ')
+    const mainArr = str.split('.')
+    let currMain = ''
+    for (let i = mainArr.length - 1; i >= 0; i--) {
+      currMain = currMain ? `${mainArr[i]}.${currMain}` : mainArr[i]
+      if (!map.has(currMain)) {
+        map.set(currMain, parseInt(num))
+      } else {
+         map.set(currMain, parseInt(num) + map.get(currMain))
+      }
+    }
+  }
+  for (const item of map) {
+    ans.push(`${item[1]} ${item[0]}`)
+  }
+  return ans
+};
+```
 #### 双指针扫描
 * 三数之和
 ```
