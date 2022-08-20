@@ -547,6 +547,38 @@ var subdomainVisits = function(cpdomains) {
   return ans
 };
 ```
+数组的度-[leetcode-697](https://leetcode.cn/problems/degree-of-an-array/)
+```
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findShortestSubArray = function(nums) {
+  const map = new Map() // 映射到每个数子 存放[度, 元素开始位置, 元素结束位置]
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i]
+    if (!map.has(num)) {
+      map.set(num, [1, i, i])
+    } else {
+      const [cnt, start] = map.get(num)
+      map.set(num, [cnt + 1, start, i])
+    }
+  }
+  // console.log('map', map)
+  let maxCnt = 0
+  let minLen = 0
+  for (const [_, [cnt, left, right]] of map) {
+    if (cnt > maxCnt) {
+      maxCnt = cnt
+      minLen = right - left + 1
+    } else if (cnt === maxCnt) {
+      // 最短子数组
+      minLen = Math.min(minLen, right - left + 1)
+    }
+  }
+  return minLen
+};
+```
 #### 双指针扫描
 * 三数之和
 ```
