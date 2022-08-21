@@ -613,4 +613,58 @@ var twoSum = function(nums, start, target) {
 };
 ```
 #### 递归
+##### 树
+* 翻转二叉树-[leetcode-226](https://leetcode.cn/problems/invert-binary-tree/)
+```
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {TreeNode}
+ */
+var invertTree = function(root) {
+  if (root === null) return null
+  const temp = root.left
+  root.left = root.right
+  root.right = temp
+  invertTree(root.left)
+  invertTree(root.right)
+  return root
+};
+```
+* 验证二叉搜索树-[leetcode-98](https://leetcode.cn/problems/validate-binary-search-tree/)
+```
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isValidBST = function(root) {
+  return check(root, -Infinity, Infinity)
+};
+
+const check = (root, rangeLeft, rangeRight) => {
+  if (root === null) return true
+  // 本来 root.val > rangeLeft && root.val < rangeRight
+  if (root.val <= rangeLeft || root.val >= rangeRight) return false
+  // 检查左右节点
+  return check(root.left, rangeLeft, root.val) && check(root.right, root.val, rangeRight)
+}
+```
+##### 排列
+##### 分治
+
 #### 树的遍历
