@@ -665,6 +665,64 @@ const check = (root, rangeLeft, rangeRight) => {
 }
 ```
 ##### 排列
+* 子集-[leetcode-78](https://leetcode.cn/problems/subsets/)
+```
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var subsets = function(nums) {
+  const ans = []
+  const arr= []
+  const recur = (i) => {
+    if (i === nums.length) {
+      ans.push([...arr])
+      return
+    }
+    // 不选
+    recur(i + 1)
+
+    // 选
+    arr.push(nums[i])
+    recur(i + 1)
+    arr.pop()
+  }
+  recur(0)
+  return ans
+};
+```
+* 组合-[leetcode-77](https://leetcode.cn/problems/combinations/)
+```
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number[][]}
+ */
+var combine = function(n, k) {
+  const ans = []
+  const arr = []
+  const recur = (i) => {
+    // 剪枝 提前退出
+    if (arr.length > k || arr.length + (n - i + 1) < k) return
+    if (i === n + 1) { // n 本身也要算
+      // if (arr.length === k) {
+      //   ans.push([...arr])
+      // }
+      ans.push([...arr])
+      return
+    }
+    // 不选
+    recur(i + 1)
+
+    // 选
+    arr.push(i)
+    recur(i + 1)
+    arr.pop()
+  }
+  recur(1)
+  return ans
+};
+```
 ##### 分治
 
 #### 树的遍历
